@@ -1,0 +1,4 @@
+[submodule "grafana"]
+	path = grafana
+	url = https://github.com/grafana/helm-charts.git
+  branch = gh-pages

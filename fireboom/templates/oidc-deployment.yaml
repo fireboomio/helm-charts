@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fireboom.fullname" . }}-oidc
+  labels:
+    app: oidc
+    version: v1
+    app.kubernetes.io/name: {{- include "fireboom.name" . }}
+    app.kubernetes.io/version: v1
+  annotations:
+    servicemesh.kubesphere.io/enabled: 'true'
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: oidc
+      version: v1
+      app.kubernetes.io/name: {{- include "fireboom.name" . }}
+      app.kubernetes.io/version: v1
+  template:
+    metadata:
+      # {{- with .Values.podAnnotations }}
+      # annotations:
+      #   {{- toYaml . | nindent 8 }}
+      # {{- end }}
+      labels:
+        app: oidc
+        version: v1
+        app.kubernetes.io/name: {{- include "fireboom.name" . }}
+        app.kubernetes.io/version: v1
+      annotations:
+        sidecar.istio.io/inject: 'true'
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccount: default
+      serviceAccountName: default
+      restartPolicy: Always
+      securityContext: {}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: oidc-config
+            items:
+              - key: token_jwt_key.key
+                path: token_jwt_key.key
+              - key: token_jwt_key.pem
+                path: token_jwt_key.pem
+            defaultMode: 420
+      containers:
+        - name: {{- include "fireboom.name" . }}-oidc
+          image: "{{ .Values.image.oidc.repository | default fireboomapi/yudai }}:{{ .Values.image.oidc.tag | default master }}"
+          imagePullPolicy: {{ .Values.image.oidc.pullPolicy | default IfNotPresent }}
+          ports:
+            - name: http-9825
+              containerPort: 9825
+              protocol: TCP
+          env:
+            - name: YUDAI_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: oidc-config
+                  key: YUDAI_DB_URL
+          volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: /yudai/cert
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources: {}
