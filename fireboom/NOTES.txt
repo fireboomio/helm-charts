@@ -1,0 +1,13 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your application should now be available at:
+
+  http://{{ .Release.Name }}.example.com/
+
+To view application logs:
+
+  kubectl logs -n {{ .Release.Namespace }} deployment/{{ .Release.Name }}
+
+For more information and next steps, please visit:
+
+  http://docs.example.com/

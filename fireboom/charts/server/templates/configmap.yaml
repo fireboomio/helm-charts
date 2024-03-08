@@ -1,0 +1,24 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "fireboom.fullname" . }}-cfgmap
+  annotations:
+    kubesphere.io/alias-name: fireboom service config
+data:
+  .env.prod: >-
+    APP_DB_URL="{{ .Values.database.url }}"
+    FB_API_LISTEN_HOST="0.0.0.0"
+    FB_API_LISTEN_PORT=9991
+    FB_API_PUBLIC_URL="{{ .Values.service.externalUrl }}"
+    FB_API_INTERNAL_URL="http://localhost:9991"
+    FB_SERVER_LISTEN_HOST="0.0.0.0"
+    FB_SERVER_LISTEN_PORT=9992
+    FB_SERVER_URL="http://localhost:9992"
+    FB_CSRF_TOKEN_SECRET="{{ randAlpha 12 }}"
+    FB_LOG_LEVEL="debug"
+    FB_REPO_URL_MIRROR="https://git.fireboom.io/{orgName}/{repoName}.git"
+    FB_RAW_URL_MIRROR="https://raw.git.fireboom.io/{orgName}/{repoName}/{branchName}/{filePath}"
+    FB_SECURE_COOKIE_BLOCK_KEY="{{ randAlpha 32 }}"
+    FB_SECURE_COOKIE_HASH_KEY="{{ randAlpha 32 }}"
+    OIDC_API_URL="http://oidc:9825"
+  authentication.key: {{ randAlphaNum 32 | quote }}

@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: {{ include "fireboom.fullname" . }}
+  labels:
+    {{- include "fireboom.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fireboom.annotations" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "fireboom.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.servicemesh.enabled }}
+        sidecar.istio.io/inject: 'true'
+        {{- end }}
+      labels:
+        {{- include "fireboom.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- include "fireboom.templateSpec" . | nindent 6 }}
+      volumes:
+        - name: share-app
+          emptyDir: {}
+        - name: mount-env
+          configMap:
+            name: {{ include "fireboom.fullname" . }}-cfgmap
+            items:
+              - key: .env.prod
+                path: .env.prod
+            defaultMode: 420
+        - name: mount-auth-key
+          configMap:
+            name: {{ include "fireboom.fullname" . }}-cfgmap
+            items:
+              - key: authentication.key
+                path: authentication.key
+            defaultMode: 420
+      initContainers:
+        - name: fb-data
+          image: "{{ .Values.image.data.repository }}:{{ .Values.image.data.tag | default "latest" }}"
+          volumeMounts:
+            - name: share-app
+              mountPath: /app
+          imagePullPolicy: {{ .Values.image.data.pullPolicy | default "IfNotPresent" }}
+        - name: fb-build
+          image: 'fireboomapi/fireboom:{{ .Values.image.fireboom.tag | default "latest" }}'
+          args:
+            - build
+          volumeMounts:
+            - name: share-app
+              mountPath: /app
+            - name: mount-env
+              readOnly: true
+              mountPath: /app/.env.prod
+              subPath: .env.prod
+          imagePullPolicy: {{ .Values.image.fireboom.pullPolicy | default "IfNotPresent" }}
+      containers:
+        - name: {{- include "fireboom.name" . }}
+          image: 'fireboomapi/fireboom:{{ .Values.image.fireboom.tag | default "latest" }}'
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http-9123
+              containerPort: 9123
+              protocol: TCP
+            - name: http-9991
+              containerPort: 9991
+              protocol: TCP
+          volumeMounts:
+            - name: share-app
+              mountPath: /app
+            - name: mount-env
+              readOnly: true
+              mountPath: /app/.env.prod
+              subPath: .env.prod
+            - name: mount-auth-key
+              readOnly: true
+              mountPath: /app/authentication.key
+              subPath: authentication.key
+          livenessProbe:
+            httpGet:
+              path: /fb_health
+              port: 9123
+              scheme: HTTP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9991
+              scheme: HTTP
+          resources:
+            {{- toYaml .Values.resources.fireboom | nindent 12 }}
+        - name: {{- include "fireboom.name" . }}-hook
+          image: "{{ .Values.image.hook.repository }}:{{ .Values.image.hook.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.hook.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http-9992
+              containerPort: 9992
+              protocol: TCP
+          volumeMounts:
+            - name: share-app
+              mountPath: /app
+            - name: mount-env
+              readOnly: true
+              mountPath: /app/.env.prod
+              subPath: .env.prod
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.resources.hook | nindent 12 }}

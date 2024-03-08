@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fireboom.fullname" . }}
+  labels:
+    {{- include "fireboom.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fireboom.annotations" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "fireboom.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.servicemesh.enabled }}
+        sidecar.istio.io/inject: 'true'
+        {{- end }}
+      labels:
+        {{- include "fireboom.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- include "fireboom.templateSpec" . | nindent 6 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "fireboom.fullname" . }}-cfgmap
+            items:
+              - key: token_jwt_key.key
+                path: token_jwt_key.key
+              - key: token_jwt_key.pem
+                path: token_jwt_key.pem
+            defaultMode: 420
+      containers:
+        - name: {{ include "fireboom.name" . }}
+          image: "{{ .Values.image.repository | default "fireboomapi/yudai" }}:{{ .Values.image.tag | default "master" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http-9825
+              containerPort: 9825
+              protocol: TCP
+          env:
+            - name: YUDAI_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: oidc-config
+                  key: YUDAI_DB_URL
+          volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: /yudai/cert
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fireboom.fullname" . }}
+  labels:
+    {{- include "fireboom.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fireboom.annotations" . | nindent 4 -}}
+    kubesphere.io/serviceType: statelessservice
+    kubesphere.io/description: OpenID Connect (OIDC) service for Fireboom
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 9825
+      targetPort: 9825
+      protocol: TCP
+      name: http-9825
+  selector:
+    {{- include "fireboom.selectorLabels" . | nindent 6 }}

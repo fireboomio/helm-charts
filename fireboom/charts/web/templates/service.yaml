@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fireboom.fullname" . }}
+  labels:
+    {{- include "fireboom.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fireboom.annotations" . | nindent 4 -}}
+    kubesphere.io/serviceType: statelessservice
+    kubesphere.io/description: Frontend pages
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http-80
+  selector:
+    {{- include "fireboom.selectorLabels" . | nindent 6 }}

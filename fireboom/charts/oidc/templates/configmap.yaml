@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "fireboom.fullname" . }}-cfgmap
+  annotations:
+    kubesphere.io/alias-name: oidc service config
+data:
+  {{- $privateKey := genPrivateKey "rsa" -}}
+  {{- $ca := genCAWithKey "fbCert" 7300 $privateKey -}}
+  {{- $cert := genSignedCert "fireboom" (list "10.0.0.1" "10.0.0.2") (list "bar.com" "bat.com") 7300 $ca }}
+  YUDAI_DB_URL: {{ .Values.db | quote }}
+  token_jwt_key.key: {{ $privateKey | b64enc | quote }}
+  token_jwt_key.pem: {{ $ca.Cert | b64enc | quote }}

@@ -39,7 +39,17 @@ helm.sh/chart: {{ include "fireboom.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: {{ include "fireboom.name" . }}
+version: v1
+{{- end }}
+
+{{/*
+Common annotations
+*/}}
+{{- define "fireboom.annotations" -}}
+{{- if .Values.servicemesh.enabled }}
+servicemesh.kubesphere.io/enabled: 'true'
+{{- end }}
 {{- end }}
 
 {{/*
@@ -51,12 +61,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Common template spec
 */}}
-{{- define "fireboom.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "fireboom.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- define "fireboom.templateSpec" -}}
+{{- with .Values.global.imagePullSecrets }}
+imagePullSecrets:
+  {{- toYaml . | nindent 8 }}
+{{- end -}}
+serviceAccount: default
+serviceAccountName: default
+restartPolicy: Always
 {{- end }}
-{{- end }}
+
