@@ -6,9 +6,145 @@ global:
 
 web:
   enabled: true
+  # web project image
+  image:
+    repository: fireboomapi/amis-admin
+    pullPolicy: IfNotPresent
+    tag: latest
 
-backend:
-  enabled: false 
+  service:
+    type: ClusterIP
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: fireboom.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  servicemesh:
+    enabled: false
+
+fireboom:
+  # Pod replica count
+  replicaCount: 1
+
+  image:
+    data:
+      # where to pull the fireboom app data
+      repository:
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    fireboom:
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "v2.0.9"
+    hook:
+      repository:
+      tag: "latest"
+      pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    externalUrl: 'http://localhost:9991'
+    # fbPort: 30987
+
+  database:
+    url: 'postgresql://postgres:postgres@postgres:5432/fireboom'
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: fireboom.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources:
+    fireboom: {}
+    hook: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  servicemesh:
+    enabled: true
 
 oidc:
   enabled: true
+  # Pod replica count
+  replicaCount: 1
+
+  image:
+    repository: fireboomapi/yudai
+    pullPolicy: IfNotPresent
+    tag: master
+
+  service:
+    type: ClusterIP
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  resources: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  servicemesh:
+    enabled: false
