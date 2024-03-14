@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: {{ include "fireboom.fullname" . }}
+  name: {{ include "fireboom.fullname" . }}
   labels:
     {{- include "fireboom.labels" . | nindent 4 }}
   annotations:
@@ -60,7 +60,7 @@ spec:
               subPath: .env.prod
           imagePullPolicy: {{ .Values.image.fireboom.pullPolicy | default "IfNotPresent" }}
       containers:
-        - name: {{- include "fireboom.name" . }}
+        - name: {{ include "fireboom.name" . }}
           image: 'fireboomapi/fireboom:{{ .Values.image.fireboom.tag | default "latest" }}'
           imagePullPolicy: IfNotPresent
           ports:
@@ -93,7 +93,7 @@ spec:
               scheme: HTTP
           resources:
             {{- toYaml .Values.resources.fireboom | nindent 12 }}
-        - name: {{- include "fireboom.name" . }}-hook
+        - name: {{ include "fireboom.name" . }}-hook
           image: "{{ .Values.image.hook.repository }}:{{ .Values.image.hook.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.image.hook.pullPolicy | default "IfNotPresent" }}
           ports:

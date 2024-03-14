@@ -1,9 +1,7 @@
 
 global:
-  nameOverride: amis-admin
-  fullnameOverride: amis-admin-test
-  # global docker image registry
-  imageRegistry: docker.io
+  nameOverride:
+  fullnameOverride:
   imagePullSecrets: []
 
 web:

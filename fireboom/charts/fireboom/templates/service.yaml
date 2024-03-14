@@ -7,13 +7,20 @@ metadata:
   annotations:
     {{- include "fireboom.annotations" . | nindent 4 }}
     kubesphere.io/serviceType: statelessservice
-    kubesphere.io/description: Frontend pages
+    kubesphere.io/description: Fireboom server
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 9123
+      targetPort: 9123
       protocol: TCP
-      name: http-80
+      name: http-9123
+      {{- if .Values.service.fbPort }}
+      nodePort: {{ .Values.service.fbPort }}
+      {{- end }}
+    - port: 9991
+      targetPort: 9991
+      protocol: TCP
+      name: http-9123
   selector:
     {{- include "fireboom.selectorLabels" . | nindent 6 }}

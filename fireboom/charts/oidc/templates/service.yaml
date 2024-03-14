@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "fireboom.labels" . | nindent 4 }}
   annotations:
-    {{- include "fireboom.annotations" . | nindent 4 -}}
+    {{- include "fireboom.annotations" . | nindent 4 }}
     kubesphere.io/serviceType: statelessservice
     kubesphere.io/description: OpenID Connect (OIDC) service for Fireboom
 spec:

@@ -19,6 +19,7 @@ image:
 service:
   type: ClusterIP
   externalUrl: 'http://localhost:9991'
+  # fbPort: 30987
 
 database:
   url: 'postgresql://postgres:postgres@postgres:5432/fireboom'
@@ -56,3 +57,6 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+servicemesh:
+  enabled: true
