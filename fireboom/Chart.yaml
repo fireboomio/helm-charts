@@ -6,12 +6,9 @@ version: 0.1.0
 appVersion: "0.1.0"
 
 dependencies:
-  - name: frontend
+  - name: web
     version: 0.1.0
-    condition: frontend.enabled
-  - name: backend
-    version: 0.1.0
-    condition: backend.enabled
+    condition: web.enabled
   - name: oidc
     version: 0.1.0
     condition: oidc.enabled
