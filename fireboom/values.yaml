@@ -119,6 +119,9 @@ oidc:
   # Pod replica count
   replicaCount: 1
 
+  # Database of oidc
+  db: 'postgresql://postgres:postgres@postgres:5432/oidc'
+
   image:
     repository: fireboomapi/yudai
     pullPolicy: IfNotPresent
