@@ -1,19 +1,22 @@
-
 global:
   nameOverride:
   fullnameOverride:
   imagePullSecrets: []
+  oidc:
+    enabled: true
+  web:
+    enabled: true
 
 web:
-  enabled: true
   # web project image
   image:
-    repository: fireboomapi/amis-admin
+    repository:
     pullPolicy: IfNotPresent
-    tag: latest
+    tag:
 
   service:
-    type: ClusterIP
+    type: NodePort
+    externalPort: 30987
 
   ingress:
     enabled: false
@@ -63,19 +66,16 @@ fireboom:
     fireboom:
       pullPolicy: IfNotPresent
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v2.0.9"
+      tag: "v2.0.10"
     hook:
       repository:
       tag: "latest"
       pullPolicy: IfNotPresent
 
   service:
-    type: ClusterIP
+    type: NodePort
     externalUrl: 'http://localhost:9991'
-    # fbPort: 30987
-
-  database:
-    url: 'postgresql://postgres:postgres@postgres:5432/fireboom'
+    # fbPort: 30988
 
   ingress:
     enabled: false
@@ -89,6 +89,28 @@ fireboom:
           - path: /
             pathType: ImplementationSpecific
     tls: []
+
+  # customInitContainers:
+  #   - name: update-db
+  #     image: 'fireboomapi/jq:alpine-3.19'
+  #     command:
+  #       - sh
+  #       - '-c'
+  #     args:
+  #       - |
+  #         jq '.kind = 3' /app/store/datasource/admin.json > temp.json
+  #         mv temp.json /app/store/datasource/admin.json
+  #     ports:
+  #       - name: http-0
+  #         containerPort: 1
+  #         protocol: TCP
+  #     resources: {}
+  #     volumeMounts:
+  #       - name: share-app
+  #         mountPath: /app
+  #     terminationMessagePath: /dev/termination-log
+  #     terminationMessagePolicy: File
+  #     imagePullPolicy: IfNotPresent
 
   resources:
     fireboom: {}
@@ -114,13 +136,17 @@ fireboom:
   servicemesh:
     enabled: true
 
+  # if you need add your custom env, you can uncomment the following line and add your env
+  # customEnv:
+  #   DB_ADMIN: "postgres://postgres:postgres@postgres:5432/amis-admin"
+
 oidc:
-  enabled: true
   # Pod replica count
   replicaCount: 1
 
   # Database of oidc
-  db: 'postgresql://postgres:postgres@postgres:5432/oidc'
+  database:
+    url: 'postgresql://postgres:postgres@postgres:5432/oidc'
 
   image:
     repository: fireboomapi/yudai

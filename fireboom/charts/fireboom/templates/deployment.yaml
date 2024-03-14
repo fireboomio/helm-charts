@@ -47,6 +47,9 @@ spec:
             - name: share-app
               mountPath: /app
           imagePullPolicy: {{ .Values.image.data.pullPolicy | default "IfNotPresent" }}
+        {{- if .Values.customInitContainers }}
+        {{- toYaml .Values.customInitContainers | nindent 8 }}
+        {{- end }}
         - name: fb-build
           image: 'fireboomapi/fireboom:{{ .Values.image.fireboom.tag | default "latest" }}'
           args:
@@ -81,16 +84,16 @@ spec:
               readOnly: true
               mountPath: /app/authentication.key
               subPath: authentication.key
-          livenessProbe:
-            httpGet:
-              path: /fb_health
-              port: 9123
-              scheme: HTTP
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 9991
-              scheme: HTTP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /fb_health
+          #     port: 9123
+          #     scheme: HTTP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 9991
+          #     scheme: HTTP
           resources:
             {{- toYaml .Values.resources.fireboom | nindent 12 }}
         - name: {{ include "fireboom.name" . }}-hook

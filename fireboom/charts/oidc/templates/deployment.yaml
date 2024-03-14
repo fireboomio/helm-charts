@@ -45,19 +45,19 @@ spec:
             - name: YUDAI_DB_URL
               valueFrom:
                 configMapKeyRef:
-                  name: oidc-config
+                  name: {{ include "fireboom.fullname" . }}-cfgmap
                   key: YUDAI_DB_URL
           volumeMounts:
             - name: config-volume
               readOnly: true
               mountPath: /yudai/cert
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

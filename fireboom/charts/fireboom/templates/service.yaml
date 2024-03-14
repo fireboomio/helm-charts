@@ -21,6 +21,6 @@ spec:
     - port: 9991
       targetPort: 9991
       protocol: TCP
-      name: http-9123
+      name: http-9991
   selector:
     {{- include "fireboom.selectorLabels" . | nindent 6 }}

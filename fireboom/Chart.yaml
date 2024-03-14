@@ -2,19 +2,16 @@ apiVersion: v2
 name: fireboom
 description: A Fireboom Helm chart for Kubernetes
 type: application
-version: 0.1.1
-appVersion: "0.1.1"
+version: 0.1.7
+appVersion: "0.1.7"
 readme: README.md
 
 dependencies:
   - name: web
-    version: 0.1.1
-    condition: web.enabled
-    alias: web
+    version: 0.1.7
+    condition: global.web.enabled
   - name: oidc
-    version: 0.1.1
-    condition: oidc.enabled
-    alias: oidc
+    version: 0.1.7
+    condition: global.oidc.enabled
   - name: fireboom
-    version: 0.1.1
-    alias: fireboom
+    version: 0.1.7
