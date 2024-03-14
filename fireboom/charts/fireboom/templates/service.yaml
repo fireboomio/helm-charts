@@ -18,9 +18,11 @@ spec:
       {{- if .Values.service.fbPort }}
       nodePort: {{ .Values.service.fbPort }}
       {{- end }}
+    {{- if .Values.service.exportAPI }}
     - port: 9991
       targetPort: 9991
       protocol: TCP
       name: http-9991
+    {{- end }}
   selector:
     {{- include "fireboom.selectorLabels" . | nindent 6 }}

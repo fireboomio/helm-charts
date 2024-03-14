@@ -110,13 +110,13 @@ spec:
               readOnly: true
               mountPath: /app/.env.prod
               subPath: .env.prod
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: http
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: http
           resources:
             {{- toYaml .Values.resources.hook | nindent 12 }}
