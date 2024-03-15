@@ -33,7 +33,7 @@ data:
     SYSTEM_AUTH_KEY="{{ randAlpha 27 }}"
     {{- if .Values.global.oidc.enabled }}
 
-    OIDC_API_URL="http://oidc:9825"
+    OIDC_API_URL="http://{{- printf "%s-%s" .Release.Name "oidc" | trunc 63 | trimSuffix "-" }}:9825"
     {{- end }}
     {{- range $key, $value := .Values.customEnv }}
     
