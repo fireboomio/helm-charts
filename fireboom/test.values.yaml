@@ -1,6 +1,4 @@
 global:
-  nameOverride:
-  fullnameOverride:
   imagePullSecrets: []
   web:
     enabled: true
@@ -74,6 +72,8 @@ fireboom:
   customEnv:
     DB_ADMIN: "postgres://postgres:KKziaPBkybHWH729@10.233.47.102/oidc_amis-admin"
     SUPER_ROLE_CODE: "admin"
+    AppID: "set-your-own-tencent-oss-app-id"
+    AppSecret: "set-your-own-tencent-oss-app-secret"
 
   service:
     type: NodePort

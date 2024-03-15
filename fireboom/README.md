@@ -11,6 +11,6 @@ If you want to use this Fireboom helm charts, you may need to prepare some prere
 
 ## Example
 
-There is [an example values.yaml](./test.values.yaml) of how to deploy `amis-admin` project with `Fireboom` helm charts.
+There is [an example values.yaml](https://git.fireboom.io/fireboomio/helm-charts/blob/main/fireboom/test.values.yaml) of how to deploy `amis-admin` project with `Fireboom` helm charts.
 
 Assuming that you have already prepared the database(`postgres://postgres:KKziaPBkybHWH729@10.233.47.102:5432/oidc_amis-admin`).

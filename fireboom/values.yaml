@@ -1,6 +1,4 @@
 global:
-  nameOverride:
-  fullnameOverride:
   imagePullSecrets: []
   oidc:
     enabled: true
@@ -30,6 +28,13 @@ web:
             pathType: ImplementationSpecific
     tls: []
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -42,12 +47,9 @@ web:
   #   memory: 128Mi
   resources: {}
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
+  # enable health-check
+  healthCheck:
+    enabled: true
 
   servicemesh:
     enabled: false
@@ -89,6 +91,13 @@ fireboom:
             pathType: ImplementationSpecific
     tls: []
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
   # customInitContainers:
   #   - name: update-db
   #     image: 'fireboomapi/jq:alpine-3.19'
@@ -125,12 +134,9 @@ fireboom:
     #   cpu: 100m
     #   memory: 128Mi
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+  # enable health-check
+  healthCheck:
+    enabled: true
 
   servicemesh:
     enabled: true
@@ -155,6 +161,13 @@ oidc:
   service:
     type: ClusterIP
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -167,12 +180,9 @@ oidc:
   #   memory: 128Mi
   resources: {}
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 80
+  # enable health-check
+  healthCheck:
+    enabled: true
 
   servicemesh:
     enabled: false

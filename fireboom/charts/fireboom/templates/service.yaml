@@ -7,7 +7,6 @@ metadata:
   annotations:
     {{- include "fireboom.annotations" . | nindent 4 }}
     kubesphere.io/serviceType: statelessservice
-    kubesphere.io/description: Fireboom server
 spec:
   type: {{ .Values.service.type }}
   ports:

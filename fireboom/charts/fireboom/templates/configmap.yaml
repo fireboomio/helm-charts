@@ -2,8 +2,6 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: {{ include "fireboom.fullname" . }}-cfgmap
-  annotations:
-    kubesphere.io/alias-name: fireboom service config
 data:
   .env.prod: >-
     FB_API_LISTEN_HOST="0.0.0.0"
@@ -33,7 +31,7 @@ data:
     FB_SECURE_COOKIE_HASH_KEY="{{ randAlpha 32 }}"
     
     SYSTEM_AUTH_KEY="{{ randAlpha 27 }}"
-    {{- if .Values.enabled }}
+    {{- if .Values.global.oidc.enabled }}
 
     OIDC_API_URL="http://oidc:9825"
     {{- end }}
