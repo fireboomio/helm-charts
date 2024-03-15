@@ -74,9 +74,8 @@ fireboom:
       pullPolicy: IfNotPresent
 
   service:
-    type: NodePort
+    type: ClusterIP
     externalUrl: 'http://localhost:9991'
-    # fbPort: 30988
 
   ingress:
     enabled: false

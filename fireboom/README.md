@@ -9,6 +9,8 @@ If you want to use this Fireboom helm charts, you may need to prepare some prere
 1. `Application database`: When you have a database data source in fireboom. Please set the database in `fireboom.customEnv` value in the `values.yaml` file.
 2. `OIDC database`: If you want to use `YuDai` oidc server, please set the `oidc.database.url` value in the `values.yaml` file.
 
+If you want to view the `Fireboom` 9123 dashboard, you may need to and an Ingress or a LoadBalancer to expose the `Fireboom` service to the outside world.
+
 ## Example
 
 There is [an example values.yaml](https://git.fireboom.io/fireboomio/helm-charts/blob/main/fireboom/test.values.yaml) of how to deploy `amis-admin` project with `Fireboom` helm charts.

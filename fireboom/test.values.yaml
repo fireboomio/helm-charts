@@ -76,9 +76,8 @@ fireboom:
     AppSecret: "set-your-own-tencent-oss-app-secret"
 
   service:
-    type: NodePort
+    type: ClusterIP
     externalUrl: 'http://192.168.211.213:30987'
-    fbPort: 30988
 
   ingress:
     enabled: false
