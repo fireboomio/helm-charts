@@ -33,7 +33,7 @@ spec:
               protocol: TCP
           env:
             - name: FB_API_URL
-              value: '{{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}:9991'
+              value: '{{ printf "%s-%s" .Release.Name "fireboom" | trunc 63 | trimSuffix "-" }}:9991'
           livenessProbe:
             httpGet:
               path: /
