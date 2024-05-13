@@ -55,10 +55,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Common template spec
 */}}
 {{- define "fireboom.templateSpec" -}}
-{{- with .Values.global.imagePullSecrets }}
+{{- with .Values.global.imagePullSecrets -}}
 imagePullSecrets:
-  {{- toYaml . | nindent 8 }}
-{{- end -}}
+  {{- range . }}
+  - name: {{ .name | quote }}
+  {{- end }}
+{{- end }}
 serviceAccount: default
 serviceAccountName: default
 restartPolicy: Always
