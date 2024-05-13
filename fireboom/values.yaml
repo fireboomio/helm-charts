@@ -14,6 +14,7 @@ web:
 
   service:
     type: NodePort
+    # port: 80
 
   ingress:
     enabled: false
@@ -75,6 +76,7 @@ fireboom:
 
   service:
     type: ClusterIP
+    port: 9123
     externalUrl: 'http://localhost:9991'
 
   ingress:

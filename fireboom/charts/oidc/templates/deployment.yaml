@@ -24,7 +24,7 @@ spec:
     spec:
       {{- include "fireboom.templateSpec" . | nindent 6 }}
       volumes:
-        - name: config-volume
+        - name: cert-volume
           configMap:
             name: {{ include "fireboom.fullname" . }}-cfgmap
             items:
@@ -48,7 +48,7 @@ spec:
                   name: {{ include "fireboom.fullname" . }}-cfgmap
                   key: YUDAI_DB_URL
           volumeMounts:
-            - name: config-volume
+            - name: cert-volume
               readOnly: true
               mountPath: /yudai/cert
           livenessProbe:
