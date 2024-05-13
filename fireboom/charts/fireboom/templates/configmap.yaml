@@ -26,6 +26,8 @@ data:
 
     FB_RAW_URL_MIRROR="https://raw.git.fireboom.io/{orgName}/{repoName}/{branchName}/{filePath}"
 
+    FB_FILES_URL="https://files.fireboom.io"
+
     FB_SECURE_COOKIE_BLOCK_KEY="{{ randAlpha 32 }}"
 
     FB_SECURE_COOKIE_HASH_KEY="{{ randAlpha 32 }}"
