@@ -34,9 +34,10 @@ spec:
           env:
             - name: FB_API_URL
               value: '{{ printf "%s-%s" .Release.Name "fireboom" | trunc 63 | trimSuffix "-" }}:9991'
+          {{- if .Values.healthCheck.enabled }}
           livenessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.healthCheck.path | default "/" }}
               port: 80
               scheme: HTTP
             timeoutSeconds: 3
@@ -45,12 +46,13 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /
+              path: {{ .Values.healthCheck.path | default "/" }}
               port: 80
               scheme: HTTP
             timeoutSeconds: 3
             periodSeconds: 30
             successThreshold: 1
             failureThreshold: 3
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

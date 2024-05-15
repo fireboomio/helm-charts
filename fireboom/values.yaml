@@ -51,6 +51,7 @@ web:
   # enable health-check
   healthCheck:
     enabled: true
+    path: /
 
   servicemesh:
     enabled: false
@@ -138,7 +139,10 @@ fireboom:
   # enable health-check
   healthCheck:
     enabled: true
-
+    hook:
+      startupProbe: {}
+      livenessProbe: {}
+      readinessProbe: {}
   servicemesh:
     enabled: true
 

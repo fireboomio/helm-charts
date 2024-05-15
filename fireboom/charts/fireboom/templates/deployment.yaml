@@ -84,6 +84,7 @@ spec:
               readOnly: true
               mountPath: /app/authentication.key
               subPath: authentication.key
+          {{- if .Values.healthCheck.enabled }}
           livenessProbe:
             httpGet:
               path: /
@@ -112,6 +113,7 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
+          {{- end }}
           resources:
             {{- toYaml .Values.resources.fireboom | nindent 12 }}
         - name: {{ include "fireboom.name" . }}-hook
@@ -128,33 +130,31 @@ spec:
               readOnly: true
               mountPath: /app/.env.prod
               subPath: .env.prod
+          {{- if .Values.healthCheck.enabled }}
           livenessProbe:
             httpGet:
               path: /health
               port: 9992
               scheme: HTTP
-            timeoutSeconds: 3
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+            {{- if .Values.healthCheck.hook.livenessProbe }}
+            {{ .Values.healthCheck.hook.livenessProbe | toYaml | nindent 14 }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /health
               port: 9992
               scheme: HTTP
-            timeoutSeconds: 3
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+            {{- if .Values.healthCheck.hook.readinessProbe }}
+            {{ .Values.healthCheck.hook.readinessProbe | toYaml | nindent 14 }}
+            {{- end }}
           startupProbe:
             httpGet:
               path: /health
               port: 9992
               scheme: HTTP
-            initialDelaySeconds: 10
-            timeoutSeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 5
+            {{- if .Values.healthCheck.hook.startupProbe }}
+            {{ .Values.healthCheck.hook.startupProbe | toYaml | nindent 14 }}
+            {{- end }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources.hook | nindent 12 }}
