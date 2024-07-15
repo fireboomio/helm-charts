@@ -173,7 +173,7 @@ oidc:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
-  config:
+  config: |-
     mysql:
       host: "<host>"
       port: <port>
