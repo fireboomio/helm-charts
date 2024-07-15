@@ -11,3 +11,5 @@ data:
     {{- $privateKey | nindent 4 }}
   token_jwt_key.pem: |-
     {{- $ca.Cert | nindent 4 }}
+  config.yaml:
+    {{- toYaml .Values.config | nindent 4 }}

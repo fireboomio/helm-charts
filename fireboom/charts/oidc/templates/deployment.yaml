@@ -33,6 +33,13 @@ spec:
               - key: token_jwt_key.pem
                 path: token_jwt_key.pem
             defaultMode: 420
+        - name: config
+          configMap:
+            name: {{ include "fireboom.fullname" . }}-cfgmap
+            items:
+              - key: config.yaml
+                path: config.yaml
+
       containers:
         - name: {{ include "fireboom.name" . }}
           image: "{{ .Values.image.repository | default "fireboomapi/yudai" }}:{{ .Values.image.tag | default "master" }}"
@@ -51,6 +58,9 @@ spec:
             - name: cert-volume
               readOnly: true
               mountPath: /yudai/cert
+            - name: config
+              readOnly: true
+              mountPath: /yudai/conf
           {{- if .Values.healthCheck.enabled }}
           livenessProbe:
             httpGet:
