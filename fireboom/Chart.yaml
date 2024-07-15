@@ -3,7 +3,7 @@ name: fireboom
 description: A Fireboom Helm chart for Kubernetes
 icon: https://www.fireboom.io/favicon.ico
 type: application
-version: 0.1.14
+version: 0.1.14-1
 appVersion: 0.1.14
 readme: README.md
 
@@ -12,7 +12,7 @@ dependencies:
     version: 0.1.14
     condition: global.web.enabled
   - name: oidc
-    version: 0.1.14
+    version: 0.1.14-1
     condition: global.oidc.enabled
   - name: fireboom
     version: 0.1.14
