@@ -2,5 +2,5 @@ apiVersion: v2
 name: oidc
 description: OpenID Connect server chart for fireboom
 type: application
-version: 0.1.14-1
+version: 0.1.14-2
 appVersion: 0.1.14
