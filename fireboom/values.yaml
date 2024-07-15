@@ -173,6 +173,9 @@ oidc:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
+  env:
+    YUDAI_DB_URL: ""
+
   config: |-
     mysql:
       host: "<host>"

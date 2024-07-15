@@ -49,11 +49,10 @@ spec:
               containerPort: 9825
               protocol: TCP
           env:
-            - name: YUDAI_DB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "fireboom.fullname" . }}-cfgmap
-                  key: YUDAI_DB_URL
+          {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+          {{- end }}
           volumeMounts:
             - name: cert-volume
               readOnly: true
