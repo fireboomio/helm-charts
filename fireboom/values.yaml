@@ -5,8 +5,12 @@ global:
   web:
     enabled: true
 
+
+
 web:
   # web project image
+  replicaCount: 1
+  imagePullSecrets: []
   image:
     repository:
     pullPolicy: IfNotPresent
@@ -59,6 +63,8 @@ web:
 fireboom:
   # Pod replica count
   replicaCount: 1
+
+  imagePullSecrets: [ ]
 
   image:
     data:

@@ -22,6 +22,10 @@ spec:
       labels:
         {{- include "fireboom.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- include "fireboom.templateSpec" . | nindent 6 }}
       volumes:
         - name: share-app
